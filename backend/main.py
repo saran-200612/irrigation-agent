@@ -37,7 +37,7 @@ app.include_router(auth_router, prefix="/auth")
 # Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify Vercel domains
+    allow_origins=["https://irrigation-agent.onrender.com"],  # Updated for Render deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
