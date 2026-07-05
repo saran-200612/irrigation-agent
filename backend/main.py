@@ -8,8 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 # Auth imports
-from .auth.router import router as auth_router
-from .auth.dependencies import get_current_user
+from auth.router import router as auth_router
+from auth.dependencies import get_current_user
 
 from db.database import engine, Base, get_db
 from db import models
