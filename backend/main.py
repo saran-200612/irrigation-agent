@@ -25,6 +25,21 @@ from rag.retriever import retriever
 async def lifespan(app: FastAPI):
     print("Database startup: creating tables...")
     Base.metadata.create_all(bind=engine)
+    # Auto‑create a demo operator for quick testing if the DB is empty
+    from db import models, database
+    from auth import security
+    db = database.SessionLocal()
+    try:
+        if not db.query(models.User).first():
+            demo_email = "test@example.com"
+            demo_password = "testPassword1"  # meets 8‑char validator
+            hashed = security.hash_password(demo_password)
+            demo_user = models.User(email=demo_email, hashed_password=hashed, full_name="Demo Operator")
+            db.add(demo_user)
+            db.commit()
+            print("Created demo user for login testing.")
+    finally:
+        db.close()
     yield
     print("Database shutdown...")
 app = FastAPI(lifespan=lifespan)
