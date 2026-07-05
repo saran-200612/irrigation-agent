@@ -8,8 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 # Auth imports
-from auth.router import router as auth_router
-from auth.dependencies import get_current_user
+from .auth.router import router as auth_router
+from .auth.dependencies import get_current_user
 
 from db.database import engine, Base, get_db
 from db import models
@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     yield
     print("Database shutdown...")
-
+app = FastAPI(lifespan=lifespan)
 from fastapi.staticfiles import StaticFiles
 
 # Serve the built React frontend (static files) from /frontend_dist
