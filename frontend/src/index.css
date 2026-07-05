@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --bg: #f5f7f2;
+  --surface: #ffffff;
+  --border: #dfe8de;
+  --text: #183126;
+  --text-dim: #61756b;
+  --water: #2f8f5b;
+  --wheat: #b56b2a;
+  --primary: #2f8f5b;
+  --secondary: #2f8fa3;
+  --warning: #c77d2e;
+  --danger: #b3402e;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #07110d;
+  --surface: #101d18;
+  --border: #22362f;
+  --text: #f1f7f3;
+  --text-dim: #8ea59a;
+  --water: #4fcf8d;
+  --wheat: #f0b96a;
+  --primary: #4fcf8d;
+  --secondary: #4fb0c8;
+  --warning: #f0b96a;
+  --danger: #ff7f70;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button,
+a,
+select,
+input {
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.card-surface,
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.hover-card:hover {
+  background-color: var(--surface);
+}
+
+/* Premium flat control panel scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border-radius: 3px;
+  border: 1px solid rgba(47, 143, 163, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--water);
+}
+
+/* Global utility classes for styling focus */
+*:focus-visible {
+  outline: 2px solid var(--water);
+  outline-offset: 2px;
+}
+
+/* Custom CSS animations */
+@keyframes draw-arc {
+  from {
+    stroke-dashoffset: 283;
+  }
+  to {
+    stroke-dashoffset: var(--dashoffset);
+  }
+}
