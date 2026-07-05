@@ -3,6 +3,9 @@ WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
+# Accept the API base URL at build time so Vite can embed it in the bundle
+ARG VITE_API_URL=https://irrigation-agent.onrender.com
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 FROM python:3.12-slim AS runtime

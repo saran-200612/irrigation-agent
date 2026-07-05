@@ -4,13 +4,13 @@ services:
     env: docker
     dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
+    dockerBuildArgs:
+      VITE_API_URL: https://irrigation-agent.onrender.com
     envVars:
       - key: GROK_API_KEY
         sync: false
       - key: WEATHERAPI_KEY
         sync: false
-      - key: VITE_API_URL
-        value: ""
       - key: JWT_SECRET
         sync: false
     autoDeploy: true
