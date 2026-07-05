@@ -2,11 +2,19 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 async function fetchJson(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
+  
+  const token = localStorage.getItem('access_token');
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
     ...options,
   });
 
@@ -23,6 +31,22 @@ async function fetchJson(endpoint, options = {}) {
 }
 
 export const apiClient = {
+  signup: (email, password, full_name) => fetchJson('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify({ email, password, full_name }),
+  }),
+
+  login: async (email, password) => {
+    const data = await fetchJson('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+    if (data && data.access_token) {
+      localStorage.setItem('access_token', data.access_token);
+    }
+    return data;
+  },
+
   listFields: () => fetchJson('/fields'),
   
   createField: (fieldData) => fetchJson('/fields', {

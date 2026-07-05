@@ -1,7 +1,7 @@
 import React from 'react';
-import { Droplet } from 'lucide-react';
+import { Droplet, LogOut } from 'lucide-react';
 
-export default function NavBar({ theme, setTheme }) {
+export default function NavBar({ theme, setTheme, onSignOut }) {
   return (
     <header className="border-b border-water/10 bg-surface/90 backdrop-blur-md sticky top-0 z-40 px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <div className="flex items-center gap-2">
@@ -39,6 +39,17 @@ export default function NavBar({ theme, setTheme }) {
             <option value="dark" className="bg-surface text-text">DARK</option>
           </select>
         </div>
+
+        {/* Sign Out Button */}
+        {onSignOut && (
+          <button
+            onClick={onSignOut}
+            className="flex items-center gap-1.5 border border-danger/25 hover:bg-danger/10 px-3 py-1.5 rounded-[6px] text-[11.5px] text-danger font-mono font-bold uppercase transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Sign Out
+          </button>
+        )}
       </div>
     </header>
   );

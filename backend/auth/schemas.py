@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
+from datetime import datetime
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -24,7 +25,7 @@ class UserOut(BaseModel):
     id: int
     email: EmailStr
     full_name: Optional[str] = None
-    created_at: str
+    created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True

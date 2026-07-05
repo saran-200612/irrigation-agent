@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { apiClient } from './api/client';
 import Layout from './layout/Layout';
 import Dashboard from './pages/Dashboard';
+import AuthPage from './components/AuthPage';
 
 export default function App() {
+  const [token, setToken] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('token') || localStorage.getItem('access_token');
+  });
+
   const [fields, setFields] = useState([]);
   const [selectedField, setSelectedField] = useState(null);
   const [fieldsLoading, setFieldsLoading] = useState(true);
@@ -30,8 +36,10 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    loadFields();
-  }, []);
+    if (token) {
+      loadFields();
+    }
+  }, [token]);
 
   useEffect(() => {
     if (selectedField) {
@@ -137,8 +145,18 @@ export default function App() {
     }
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
+    setToken(null);
+  };
+
+  if (!token) {
+    return <AuthPage onLoginSuccess={() => setToken(localStorage.getItem('access_token'))} />;
+  }
+
   return (
-    <Layout theme={theme} setTheme={setTheme}>
+    <Layout theme={theme} setTheme={setTheme} onSignOut={handleSignOut}>
       <Dashboard
         fields={fields}
         selectedField={selectedField}

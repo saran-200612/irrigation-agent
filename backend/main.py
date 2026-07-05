@@ -45,6 +45,70 @@ app.add_middleware(
 def health_check():
     return {"status": "healthy", "time": datetime.utcnow().isoformat()}
 
+# --- Database Explorer Endpoint ---
+
+@app.get("/db/tables")
+def get_db_tables(table: str = None, page: int = 1, page_size: int = 50):
+    """Return all tables with columns and row data from the SQLite database."""
+    import sqlite3
+    from db.database import DB_PATH
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    try:
+        # Get all table names
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+        table_names = [row["name"] for row in cursor.fetchall()]
+
+        if table and table in table_names:
+            # Return data for a specific table
+            # Get total count
+            cursor.execute(f'SELECT COUNT(*) as cnt FROM [{table}]')
+            total_rows = cursor.fetchone()["cnt"]
+
+            # Get paginated rows
+            offset = (page - 1) * page_size
+            cursor.execute(f'SELECT * FROM [{table}] LIMIT ? OFFSET ?', (page_size, offset))
+            rows = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description] if cursor.description else []
+
+            row_data = []
+            for row in rows:
+                row_dict = {}
+                for col in columns:
+                    val = row[col]
+                    # Truncate long strings for display
+                    if isinstance(val, str) and len(val) > 300:
+                        val = val[:300] + "…"
+                    row_dict[col] = val
+                row_data.append(row_dict)
+
+            return {
+                "tables": table_names,
+                "selected_table": table,
+                "columns": columns,
+                "rows": row_data,
+                "total_rows": total_rows,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": max(1, (total_rows + page_size - 1) // page_size),
+            }
+        else:
+            # Return overview of all tables
+            overview = []
+            for t in table_names:
+                cursor.execute(f'SELECT COUNT(*) as cnt FROM [{t}]')
+                count = cursor.fetchone()["cnt"]
+                cursor.execute(f'PRAGMA table_info([{t}])')
+                cols = [{"name": c["name"], "type": c["type"]} for c in cursor.fetchall()]
+                overview.append({"name": t, "row_count": count, "columns": cols})
+
+            return {"tables": table_names, "overview": overview}
+    finally:
+        conn.close()
+
 @app.get("/fields/{id}/weather")
 def get_field_weather(id: int, db: Session = Depends(get_db)):
     field = db.query(models.Field).filter(models.Field.id == id).first()
