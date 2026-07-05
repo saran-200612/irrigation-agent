@@ -29,9 +29,8 @@ async def lifespan(app: FastAPI):
     print("Database shutdown...")
 app = FastAPI(lifespan=lifespan)
 from fastapi.staticfiles import StaticFiles
+import os
 
-# Serve the built React frontend (static files) from /frontend_dist
-app.mount("/", StaticFiles(directory="frontend_dist", html=True), name="frontend")
 # Include auth router
 app.include_router(auth_router, prefix="/auth")
 
@@ -311,3 +310,8 @@ def chat_about_schedule(id: int, request: schemas.ChatRequest, db: Session = Dep
     db.commit()
 
     return schemas.ChatResponse(response=assistant_reply)
+
+# Serve the built React frontend (static files) from /frontend_dist
+# MUST be mounted LAST so API routes take priority over the catch-all
+if os.path.isdir("frontend_dist"):
+    app.mount("/", StaticFiles(directory="frontend_dist", html=True), name="frontend")

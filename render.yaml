@@ -10,7 +10,7 @@ services:
       - key: WEATHERAPI_KEY
         sync: false
       - key: VITE_API_URL
-        value: "/"
+        value: ""
       - key: JWT_SECRET
         sync: false
     autoDeploy: true
