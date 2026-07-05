@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: irrigation-agent
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: GROK_API_KEY
+        sync: false
+      - key: WEATHERAPI_KEY
+        sync: false
+      - key: VITE_API_URL
+        value: "/"
+      - key: JWT_SECRET
+        sync: false
+    autoDeploy: true

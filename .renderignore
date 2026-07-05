@@ -1,0 +1,17 @@
+# Ignore Python virtual environments
+.venv/
+# Ignore node_modules (frontend)
+frontend/node_modules/
+# Ignore build artifacts
+frontend/dist/
+# Ignore local environment files
+.env
+.env.example
+# Ignore git directory
+.git
+# Ignore IDE files
+.vscode/
+.idea/
+# Ignore OS files
+.DS_Store
+Thumbs.db

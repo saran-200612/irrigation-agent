@@ -28,7 +28,10 @@ async def lifespan(app: FastAPI):
     yield
     print("Database shutdown...")
 
-app = FastAPI(title="Irrigation Scheduling Agent API", lifespan=lifespan)
+from fastapi.staticfiles import StaticFiles
+
+# Serve the built React frontend (static files) from /frontend_dist
+app.mount("/", StaticFiles(directory="frontend_dist", html=True), name="frontend")
 # Include auth router
 app.include_router(auth_router, prefix="/auth")
 

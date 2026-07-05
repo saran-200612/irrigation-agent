@@ -1,0 +1,14 @@
+# Exclude unnecessary files from Docker build context
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+backend/.venv/
+backend/__pycache__/
+backend/.env
+backend/.env.example
+.git/
+.gitignore
+.vscode/
+.idea/
+*.log
+*.pyc
